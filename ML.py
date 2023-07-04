@@ -15,8 +15,8 @@ for k in ks:
     knn = KNeighborsClassifier(n_neighbors=k)
     score = cross_val_score(knn, X_train, y_train, cv=5)
     scores.append(np.mean(score))
-
-plt.plot(scores, ks)
+ 
+plt.plot(ks, scores)
 plt.xlabel('accuracy')
 plt.ylabel('k')
 plt.show()
