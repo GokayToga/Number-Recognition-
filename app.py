@@ -1,6 +1,6 @@
 import os
 
-from flask import render_template, request, Response
+from flask import Flask, render_template, request, Response
 from flask.views import MethodView, View
 
 from flask.views import View
@@ -13,6 +13,7 @@ from sklearn.datasets import load_digits
 
 from classifier import ClassifierFactory
 from image_processing import process_image
+from views import IndexView, PredictDigitView
 
 app = Flask(__name__)
 
