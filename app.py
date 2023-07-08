@@ -1,21 +1,12 @@
+app = Flask(__name__)
+
+from flask import Flask
+from views import IndexView, PredictDigitView
+from settings import CLASSIFIER_STORAGE
+from repo import ClassifierRepo
+from services import PredictDigitService
 import os
 
-from flask import Flask, render_template, request, Response
-from flask.views import MethodView, View
-
-from flask.views import View
-
-from repo import ClassifierRepo           
-from services import PredictDigitService
-from settings import CLASSIFIER_STORAGE
-
-from sklearn.datasets import load_digits
-
-from classifier import ClassifierFactory
-from image_processing import process_image
-from views import IndexView, PredictDigitView
-
-app = Flask(__name__)
 
 app.add_url_rule(
     '/api/predict',
@@ -29,7 +20,7 @@ app.add_url_rule(
     methods=['GET']
 )
 
-if __name__ == 'ML':
+if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
 

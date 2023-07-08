@@ -5,6 +5,7 @@ from PIL import Image, ImageOps, ImageChops
 from io import BytesIO
 
 class process_image:
+    
     def __init__(self, image_data_uri): 
         self.image_data_uri = image_data_uri
 
