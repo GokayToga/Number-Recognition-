@@ -4,10 +4,45 @@
     <title>Number Recognition</title>
 </head>
 <body>
-    <h1>Number Recognition App</h1>
-    <form action="/api/predict" method="POST">
-        <input type="text" name="image" placeholder="Image URL" required>
+    <h1>Number Recognition</h1>
+    <form action="/" method="POST">
+        <label for="image-url">Image URL:</label>
+        <input type="text" id="image-url" name="image_url">
         <button type="submit">Predict</button>
     </form>
+    
+    <div id="result"></div>
+    
+    <script>
+        // Handle form submission using JavaScript
+        const form = document.querySelector('form');
+        const resultDiv = document.querySelector('#result');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const imageInput = document.querySelector('#image-url');
+            const imageUrl = imageInput.value;
+
+            // Make a POST request to the Flask app
+            fetch('/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 'image_url': imageUrl })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display the prediction result
+                resultDiv.textContent = `Prediction: ${data.prediction}`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resultDiv.textContent = 'An error occurred. Please try again.';
+            });
+        });
+    </script>
 </body>
 </html>
+
