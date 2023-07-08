@@ -1,4 +1,3 @@
-app = Flask(__name__)
 
 from flask import Flask
 from views import IndexView, PredictDigitView
@@ -6,6 +5,8 @@ from settings import CLASSIFIER_STORAGE
 from repo import ClassifierRepo
 from services import PredictDigitService
 import os
+
+app = Flask(__name__)
 
 
 app.add_url_rule(
