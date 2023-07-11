@@ -10,7 +10,8 @@ class ProcessImage:
         self.image_data_uri = image_data_uri
 
     def process_image(self):
-        replaced_image = self.replace_transparent_background(self.image_data_uri)
+        image = self.decode_image_data_uri(self.image_data_uri)
+        replaced_image = self.replace_transparent_background(image)
         trimmed_image = self.trim_borders(replaced_image)
         padded_image = self.pad_image(trimmed_image)
         inverted_image = self.invert_colors(padded_image)
@@ -18,6 +19,8 @@ class ProcessImage:
         grayscale_image = self.convert_to_grayscale(resized_image)
         normalized_image = self.normalize_image(grayscale_image)
         return normalized_image
+
+    
     @staticmethod
     def replace_transparent_background(image):
         image_arr = np.array(image)
@@ -56,3 +59,31 @@ class ProcessImage:
     @staticmethod
     def resize_image(image):
         return image.resize((8, 8), Image.LINEAR)
+    
+    @staticmethod
+    def decode_image_data_uri(image_data_uri):
+        # Split the image data URI into the scheme and encoded data
+        scheme, encoded_data = image_data_uri.split(':', 1)
+
+        # Remove any leading whitespace characters from the encoded data
+        encoded_data = encoded_data.strip()
+
+        # Add padding to the encoded data if necessary
+        missing_padding = len(encoded_data) % 4
+        if missing_padding:
+            encoded_data += '=' * (4 - missing_padding)
+
+        # Decode the base64-encoded data and create an image object
+        image_bytes = base64.b64decode(encoded_data)
+        image = Image.open(BytesIO(image_bytes))
+
+        # Convert the image to RGB mode if it has an alpha channel
+        if image.mode == 'RGBA':
+            image = image.convert('RGB')
+
+        return image
+
+
+
+
+
