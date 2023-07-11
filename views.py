@@ -20,7 +20,11 @@ class PredictDigitView(MethodView):
             repo = ClassifierRepo(CLASSIFIER_STORAGE)
             service = PredictDigitService(repo)
             image_data_uri = request.json.get('image')
-            prediction = service.handle(image_data_uri)
-            return jsonify({'prediction': prediction})
+
+            if image_data_uri:
+                prediction = service.handle(image_data_uri)
+                return jsonify({'prediction': prediction})
+            else:
+                return jsonify({'error': 'Invalid image data.'}), 400
         else:
             return jsonify({'error': 'Invalid request. Expected JSON data.'}), 400

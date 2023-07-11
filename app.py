@@ -16,21 +16,26 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        # Get the image URL from the form submission
-        image_url = request.form.get('image_url')
+        try:
+            image_url = request.form.get('image_url')
+
+            # Create an instance of the ClassifierRepo
+            repo = ClassifierRepo(CLASSIFIER_STORAGE)
+            
+            # Create an instance of the PredictDigitService
+            service = PredictDigitService(repo)
+
+            # Make the prediction using the image URL
+            prediction = service.handle(image_url)
+
+            # Return the prediction in a JSON response
+            return jsonify({'prediction': prediction})
         
-        # Validate the URL or perform any necessary checks
-        
-        # Create an instance of the PredictDigitService
-        service = PredictDigitService()
-        
-        # Process the image and get the prediction
-        prediction = service.handle(image_url)
-        
-        # Return the prediction as JSON response
-        return jsonify({'prediction': prediction})
-    
-    # If it's a GET request, render the index template
+        except Exception as e:
+            # Return an error message in a JSON response
+            return jsonify({'error': str(e)}), 500
+
+    # Handle the GET request
     return render_template('index.html')
 
 """
