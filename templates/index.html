@@ -14,34 +14,37 @@
     <div id="result"></div>
     
     <script>
-        // Handle form submission using JavaScript
-        const form = document.querySelector('form');
-        const resultDiv = document.querySelector('#result');
+        document.getElementById('predict-button').addEventListener('click', function() {
+        var image_url = document.getElementById('image-url').value;
 
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            const imageInput = document.querySelector('#image-url');
-            const imageUrl = imageInput.value;
-
-            // Make a POST request to the Flask app
-            fetch('/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ 'image_url': imageUrl })
+        // Make a POST request to the server
+        fetch('/api/predict', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'image': image_url
             })
-            .then(response => response.json())
-            .then(data => {
-                // Display the prediction result
-                resultDiv.textContent = `Prediction: ${data.prediction}`;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                resultDiv.textContent = 'An error occurred. Please try again.';
-            });
+        })
+        .then(function(response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Request failed.');
+            }
+        })
+        .then(function(data) {
+            // Handle the prediction response
+            var prediction = data.prediction;
+            document.getElementById('prediction-result').textContent = 'Prediction: ' + prediction;
+        })
+        .catch(function(error) {
+            // Handle any errors
+            console.log(error);
+            document.getElementById('prediction-result').textContent = 'Error occurred. Please try again.';
         });
+    });
     </script>
 </body>
 </html>
