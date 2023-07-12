@@ -8,54 +8,43 @@
     <form action="/" method="POST">
         <label for="image-url">Image URL:</label>
         <input type="text" id="image-url" name="image_url">
-        <button type="submit">Predict</button>
+        <button id="predict-button" type="button">Predict</button>
     </form>
     
     <div id="result"></div>
     
     <script>
         document.getElementById('predict-button').addEventListener('click', function() {
-        var image_url = document.getElementById('image-url').value;
+            var image_url = document.getElementById('image-url').value;
 
-        // Make a POST request to the server
-        fetch('/api/predict', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                'image': image_url
+            // Make a POST request to the server
+            fetch('/api/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'image': image_url
+                })
             })
-        })
-        .then(function(response) {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error('Request failed.');
-            }
-        })
-        .then(function(data) {
-            // Handle the prediction response
-            var prediction = data.prediction;
-            document.getElementById('prediction-result').textContent = 'Prediction: ' + prediction;
-        })
-        .catch(function(error) {
-            // Handle any errors
-            console.log(error);
-            document.getElementById('prediction-result').textContent = 'Error occurred. Please try again.';
+            .then(function(response) {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Request failed.');
+                }
+            })
+            .then(function(data) {
+                // Handle the prediction response
+                var prediction = data.prediction;
+                document.getElementById('result').textContent = 'Prediction: ' + prediction;
+            })
+            .catch(function(error) {
+                // Handle any errors
+                console.log(error);
+                document.getElementById('result').textContent = 'Error occurred. Please try again.';
+            });
         });
-        
-        function handlePrediction(response) {
-        const predictionElement = document.getElementById('prediction');
-        if (response && response.prediction !== undefined) {
-            predictionElement.innerText = `Prediction: ${response.prediction}`;
-        } else {
-            predictionElement.innerText = 'Prediction: N/A';
-        }
-        }      
-
-    });
     </script>
 </body>
 </html>
-

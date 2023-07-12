@@ -15,6 +15,8 @@ app = Flask(__name__)
 # Route for the index page
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    image_url = request.json.get('image')
+    print('Received image URL:', image_url)
     if request.method == 'POST':
         try:
             image_url = request.form.get('image_url')
@@ -38,25 +40,16 @@ def index():
     # Handle the GET request
     return render_template('index.html')
 
-"""
-app.add_url_rule(
-    '/api/predict',
-    view_func=PredictDigitView.as_view('predict_digit'),
-    methods=['POST']
-)
 
-app.add_url_rule(
-    '/',
-    view_func=IndexView.as_view('index'),
-    methods=['GET']
-)
+# Register the views
+app.add_url_rule('/', view_func=IndexView.as_view('index'), methods=['GET'])
+app.add_url_rule('/api/predict', view_func=PredictDigitView.as_view('predict_digit'), methods=['POST'])
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 4000))
-    app.run(host='0.0.0.0', port=port)
-"""
-if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
+
+
+
 
 
 

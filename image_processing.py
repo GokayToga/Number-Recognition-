@@ -10,6 +10,8 @@ class ProcessImage:
         self.image_data_uri = image_data_uri
 
     def process_image(self):
+
+        print('Received image data URI:', self.image_data_uri)
         try:
             image = self.decode_image_data_uri()
             if image is None:
@@ -94,6 +96,9 @@ class ProcessImage:
         except Exception as e:
             print(f"Error decoding image data URI: {e}")
             return None
+        
+
+    
 
 
 
