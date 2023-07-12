@@ -10,15 +10,29 @@ class ProcessImage:
         self.image_data_uri = image_data_uri
 
     def process_image(self):
-        image = self.decode_image_data_uri(self.image_data_uri)
-        replaced_image = self.replace_transparent_background(image)
-        trimmed_image = self.trim_borders(replaced_image)
-        padded_image = self.pad_image(trimmed_image)
-        inverted_image = self.invert_colors(padded_image)
-        resized_image = self.resize_image(inverted_image)
-        grayscale_image = self.convert_to_grayscale(resized_image)
-        normalized_image = self.normalize_image(grayscale_image)
-        return normalized_image
+        try:
+            image = self.decode_image_data_uri()
+            if image is None:
+                return None
+
+            image = self.replace_transparent_background(image)
+            image = self.trim_borders(image)
+            image = self.pad_image(image)
+            image = self.invert_colors(image)
+            image = self.resize_image(image)
+            image = self.convert_to_grayscale(image)
+            image = self.normalize_image(image)
+
+            # Convert the image to a 1D array
+            image_data = np.array(image).flatten()
+
+            # Return the processed image data
+            return image_data
+
+        except Exception as e:
+            print(f"Error processing image: {e}")
+            return None
+
 
     
     @staticmethod
@@ -62,27 +76,24 @@ class ProcessImage:
     
     @staticmethod
     def decode_image_data_uri(image_data_uri):
-        # Split the image data URI into the scheme and encoded data
-        scheme, encoded_data = image_data_uri.split(':', 1)
-
-        # Remove any leading whitespace characters from the encoded data
-        encoded_data = encoded_data.strip()
-
-        # Add padding to the encoded data if necessary
-        missing_padding = len(encoded_data) % 4
-        if missing_padding:
-            encoded_data += '=' * (4 - missing_padding)
-
-        # Decode the base64-encoded data and create an image object
-        image_bytes = base64.b64decode(encoded_data)
-        image = Image.open(BytesIO(image_bytes))
-
-        # Convert the image to RGB mode if it has an alpha channel
-        if image.mode == 'RGBA':
-            image = image.convert('RGB')
-
-        return image
-
+        try:
+            # Extract the base64-encoded image data from the URI
+            image_data = image_data_uri.split(",")[1]
+            
+            # Decode the base64-encoded image data
+            decoded_image_data = base64.b64decode(image_data)
+            
+            # Create a BytesIO object from the decoded image data
+            image_stream = BytesIO(decoded_image_data)
+            
+            # Open the image using PIL
+            image = Image.open(image_stream)
+            
+            # Return the PIL image object
+            return image
+        except Exception as e:
+            print(f"Error decoding image data URI: {e}")
+            return None
 
 
 

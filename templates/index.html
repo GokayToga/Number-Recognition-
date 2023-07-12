@@ -44,6 +44,16 @@
             console.log(error);
             document.getElementById('prediction-result').textContent = 'Error occurred. Please try again.';
         });
+        
+        function handlePrediction(response) {
+        const predictionElement = document.getElementById('prediction');
+        if (response && response.prediction !== undefined) {
+            predictionElement.innerText = `Prediction: ${response.prediction}`;
+        } else {
+            predictionElement.innerText = 'Prediction: N/A';
+        }
+        }      
+
     });
     </script>
 </body>
