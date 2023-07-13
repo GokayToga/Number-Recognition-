@@ -1,4 +1,5 @@
 import numpy as np
+import requests
 from skimage import exposure
 import base64
 from PIL import Image, ImageOps, ImageChops
@@ -79,14 +80,12 @@ class ProcessImage:
     @staticmethod
     def decode_image_data_uri(image_data_uri):
         try:
-            # Extract the base64-encoded image data from the URI
-            image_data = image_data_uri.split(",")[1]
+            # Send a GET request to fetch the image from the URL
+            response = requests.get(image_data_uri)
+            response.raise_for_status()
             
-            # Decode the base64-encoded image data
-            decoded_image_data = base64.b64decode(image_data)
-            
-            # Create a BytesIO object from the decoded image data
-            image_stream = BytesIO(decoded_image_data)
+            # Create a BytesIO object from the response content
+            image_stream = BytesIO(response.content)
             
             # Open the image using PIL
             image = Image.open(image_stream)
@@ -94,7 +93,7 @@ class ProcessImage:
             # Return the PIL image object
             return image
         except Exception as e:
-            print(f"Error decoding image data URI: {e}")
+            print(f"Error fetching or opening image from URL: {e}")
             return None
         
 

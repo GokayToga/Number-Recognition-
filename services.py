@@ -19,8 +19,7 @@ class PredictDigitService:
             )
             self.repo.update(classifier)
         
-        image_processor = ProcessImage(image_data_uri)
-        x = image_processor.process_image()  # Update this line with the appropriate method for image processing
+        x = image_processor.decode_image_data_uri(image_data_uri)
         if x is None:
             return 0
 
