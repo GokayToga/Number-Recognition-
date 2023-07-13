@@ -15,36 +15,37 @@
     
     <script>
         document.getElementById('predict-button').addEventListener('click', function() {
-            var image_url = document.getElementById('image-url').value;
+    var image_url = document.getElementById('image-url').value;
 
-            // Make a POST request to the server
-            fetch('/api/predict', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    'image': image_url
-                })
-            })
-            .then(function(response) {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('Request failed.');
-                }
-            })
-            .then(function(data) {
-                // Handle the prediction response
-                var prediction = data.prediction;
-                document.getElementById('result').textContent = 'Prediction: ' + prediction;
-            })
-            .catch(function(error) {
-                // Handle any errors
-                console.log(error);
-                document.getElementById('result').textContent = 'Error occurred. Please try again.';
-            });
-        });
+    // Make a POST request to the server
+    fetch('/api/predict', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            'image': image_url
+        })
+    })
+    .then(function(response) {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Request failed.');
+        }
+    })
+    .then(function(data) {
+        // Handle the prediction response
+        var prediction = data.prediction;
+        document.getElementById('result').textContent = 'Prediction: ' + prediction;
+    })
+    .catch(function(error) {
+        // Handle any errors
+        console.log(error);
+        document.getElementById('result').textContent = 'Error occurred. Please try again.';
+    });
+});
+
     </script>
 </body>
 </html>
