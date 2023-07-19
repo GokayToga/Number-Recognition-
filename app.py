@@ -1,14 +1,8 @@
-
-from flask import Flask
+from flask import Flask, render_template, request, jsonify
 from views import IndexView, PredictDigitView
-from settings import CLASSIFIER_STORAGE
 from repo import ClassifierRepo
 from services import PredictDigitService
-from flask import Flask, render_template
-
-from flask import Flask, render_template, request, Response, jsonify
-
-import os
+from settings import CLASSIFIER_STORAGE
 
 app = Flask(__name__)
 
@@ -23,7 +17,7 @@ def index():
 
             # Create an instance of the ClassifierRepo
             repo = ClassifierRepo(CLASSIFIER_STORAGE)
-            
+
             # Create an instance of the PredictDigitService
             service = PredictDigitService(repo)
 
@@ -32,7 +26,7 @@ def index():
 
             # Return the prediction in a JSON response
             return jsonify({'prediction': prediction})
-        
+
         except Exception as e:
             # Return an error message in a JSON response
             return jsonify({'error': str(e)}), 500
@@ -40,16 +34,11 @@ def index():
     # Handle the GET request
     return render_template('index.html')
 
-# Register the index endpoint with a different name
-app.add_url_rule('/', view_func=IndexView.as_view('index_view'), methods=['GET', 'POST'])
-
 # Register the predict_digit endpoint
 app.add_url_rule('/api/predict', view_func=PredictDigitView.as_view('predict_digit'), methods=['POST'])
 
 if __name__ == '__main__':
     app.run()
-
-
 
 
 

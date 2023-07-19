@@ -6,28 +6,29 @@ from PIL import Image, ImageOps, ImageChops
 from io import BytesIO
 
 class ProcessImage:
-    #process_image
-    def __init__(self, image_data_uri): 
-        self.image_data_uri = image_data_uri
+    def __init__(self, image_url):
+        self.image_url = image_url
 
     def process_image(self):
-
-        print('Received image data URI:', self.image_data_uri)
         try:
-            image = self.decode_image_data_uri()
-            if image is None:
-                return None
+            # Send a GET request to fetch the image from the URL
+            response = requests.get(self.image_url)
+            response.raise_for_status()
 
-            image = self.replace_transparent_background(image)
-            image = self.trim_borders(image)
-            image = self.pad_image(image)
-            image = self.invert_colors(image)
-            image = self.resize_image(image)
-            image = self.convert_to_grayscale(image)
-            image = self.normalize_image(image)
+            # Open the image using PIL
+            image = Image.open(BytesIO(response.content))
 
-            # Convert the image to a 1D array
-            image_data = np.array(image).flatten()
+            # Apply image processing steps
+            replaced_image = self.replace_transparent_background(image)
+            trimmed_image = self.trim_borders(replaced_image)
+            padded_image = self.pad_image(trimmed_image)
+            inverted_image = self.invert_colors(padded_image)
+            resized_image = self.resize_image(inverted_image)
+            grayscale_image = self.convert_to_grayscale(resized_image)
+            normalized_image = self.normalize_image(grayscale_image)
+
+            # Convert the processed image to a numpy array
+            image_data = np.array(normalized_image)
 
             # Return the processed image data
             return image_data
