@@ -81,20 +81,22 @@ class ProcessImage:
     @staticmethod
     def decode_image_data_uri(image_data_uri):
         try:
-            # Send a GET request to fetch the image from the URL
-            response = requests.get(image_data_uri)
-            response.raise_for_status()
-            
-            # Create a BytesIO object from the response content
-            image_stream = BytesIO(response.content)
-            
-            # Open the image using PIL
-            image = Image.open(image_stream)
-            
-            # Return the PIL image object
+            if image_data_uri.startswith('data:image/'):
+                # Handle base64-encoded image data URI
+                image_data = image_data_uri.split(",")[1]
+                decoded_image_data = base64.b64decode(image_data)
+                image_stream = BytesIO(decoded_image_data)
+                image = Image.open(image_stream)
+            else:
+                # Handle regular URL-based image data URI
+                response = requests.get(image_data_uri)
+                response.raise_for_status()
+                image_stream = BytesIO(response.content)
+                image = Image.open(image_stream)
+
             return image
         except Exception as e:
-            print(f"Error fetching or opening image from URL: {e}")
+            print(f"Error decoding image data URI: {e}")
             return None
         
 
