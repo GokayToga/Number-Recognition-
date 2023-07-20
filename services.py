@@ -19,9 +19,9 @@ class PredictDigitService:
             )
             self.repo.update(classifier)
         
-        x = image_processor.decode_image_data_uri(image_data_uri)
-        if x is None:
+        processed_image_data = image_processor.process_image()
+        if processed_image_data is None:
             return 0
 
-        prediction = classifier.predict(x)[0]
+        prediction = classifier.predict([processed_image_data])[0]
         return prediction

@@ -27,8 +27,8 @@ class ProcessImage:
             grayscale_image = self.convert_to_grayscale(resized_image)
             normalized_image = self.normalize_image(grayscale_image)
 
-            # Convert the processed image to a numpy array
-            image_data = np.array(normalized_image)
+            # Convert the processed image to a 1D array
+            image_data = np.array(image).flatten()
 
             # Return the processed image data
             return image_data
