@@ -76,7 +76,18 @@ class ProcessImage:
 
     @staticmethod
     def resize_image(image):
-        return image.resize((8, 8), Image.LINEAR)
+        return image.resize((8, 8), Image.LANCZOS)
+    
+    @staticmethod
+    def convert_to_grayscale(image):
+        return image.convert("L")
+    
+    @staticmethod
+    def normalize_image(image):
+        # Normalize the image data to values between 0 and 16
+        image_arr = np.array(image)
+        image_arr = image_arr / 16.0
+        return Image.fromarray(image_arr)
     
     @staticmethod
     def decode_image_data_uri(image_data_uri):
