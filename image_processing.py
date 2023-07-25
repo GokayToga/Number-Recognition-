@@ -30,6 +30,22 @@ class ProcessImage:
             # Convert the processed image to a 1D array
             image_data = np.array(image).flatten()
 
+            # Resize the image to 8x8
+            image = image.resize((8, 8), Image.LANCZOS)
+
+            # Convert the image to grayscale
+            image = ImageOps.grayscale(image)
+
+            # Invert the colors
+            image = ImageOps.invert(image)
+
+            # Normalize the image data to values between 0 and 16
+            image_arr = np.array(image)
+            image_arr = image_arr / 16.0
+
+            # Flatten the image array
+            image_data = image_arr.flatten()
+
             # Return the processed image data
             return image_data
 
